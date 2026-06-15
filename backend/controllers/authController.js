@@ -1,75 +1,54 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
-const sendOtpEmail = require("../utils/sendOtp");
 
-const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
+// Only @nsut.ac.in emails are allowed to register
+const isCollegeEmail = (email) => /^[^\s@]+@nsut\.ac\.in$/.test(email);
 
 // @route POST /register
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
 
-    if (!name || !email || !password) {
+    if (!username || !email || !password || !confirmPassword) {
       return res.status(400).json({ message: "Please provide all fields" });
     }
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser && existingUser.isVerified) {
-      return res.status(400).json({ message: "User already exists" });
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedUsername = username.trim().toLowerCase();
+
+    if (!isCollegeEmail(normalizedEmail)) {
+      return res.status(400).json({ message: "Registration is only allowed with an @nsut.ac.in email address" });
+    }
+
+    const existingEmail = await User.findOne({ email: normalizedEmail });
+    if (existingEmail) {
+      return res.status(400).json({ message: "An account with this email already exists" });
+    }
+
+    const existingUsername = await User.findOne({ username: normalizedUsername });
+    if (existingUsername) {
+      return res.status(400).json({ message: "This username is already taken" });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const otp = generateOtp();
-    const otpHash = await bcrypt.hash(otp, 10);
-    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    let user;
-    if (existingUser) {
-      existingUser.name = name;
-      existingUser.passwordHash = passwordHash;
-      existingUser.otpHash = otpHash;
-      existingUser.otpExpiresAt = otpExpiresAt;
-      user = await existingUser.save();
-    } else {
-      user = await User.create({ name, email, passwordHash, otpHash, otpExpiresAt, isVerified: false });
-    }
-
-    await sendOtpEmail(email, otp);
-
-    res.status(201).json({ message: "OTP sent to email", userId: user._id });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// @route POST /verify-otp
-const verifyOtp = async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
-    if (user.isVerified) return res.status(400).json({ message: "User already verified" });
-
-    if (!user.otpHash || !user.otpExpiresAt || user.otpExpiresAt < new Date()) {
-      return res.status(400).json({ message: "OTP expired, please register again" });
-    }
-
-    const isMatch = await bcrypt.compare(otp, user.otpHash);
-    if (!isMatch) return res.status(400).json({ message: "Invalid OTP" });
-
-    user.isVerified = true;
-    user.otpHash = null;
-    user.otpExpiresAt = null;
-    await user.save();
+    const user = await User.create({
+      username: normalizedUsername,
+      email: normalizedEmail,
+      passwordHash,
+    });
 
     const token = generateToken(user._id);
 
-    res.status(200).json({
-      message: "Email verified successfully",
+    res.status(201).json({
+      message: "Account created successfully",
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, username: user.username, email: user.email },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -79,21 +58,30 @@ const verifyOtp = async (req, res) => {
 // @route POST /login
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid email or password" });
-    if (!user.isVerified) return res.status(403).json({ message: "Please verify your email first" });
+    if (!username || !password) {
+      return res.status(400).json({ message: "Please provide username and password" });
+    }
+
+    const normalizedUsername = username.trim().toLowerCase();
+
+    const user = await User.findOne({ username: normalizedUsername });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
 
     const token = generateToken(user._id);
 
     res.status(200).json({
       message: "Login successful",
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, username: user.username, email: user.email },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -109,4 +97,4 @@ const getProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, verifyOtp, loginUser, getProfile };
+module.exports = { registerUser, loginUser, getProfile };

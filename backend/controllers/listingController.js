@@ -31,7 +31,7 @@ const getListings = async (req, res) => {
     if (search) query.title = { $regex: search, $options: "i" };
 
     const listings = await Listing.find(query)
-      .populate("seller", "name avatar")
+      .populate("seller", "username avatar")
       .sort({ createdAt: -1 });
 
     res.status(200).json(listings);
@@ -43,7 +43,7 @@ const getListings = async (req, res) => {
 // @route GET /listing/:id
 const getListingById = async (req, res) => {
   try {
-    const listing = await Listing.findById(req.params.id).populate("seller", "name avatar email");
+    const listing = await Listing.findById(req.params.id).populate("seller", "username avatar email");
     if (!listing) return res.status(404).json({ message: "Listing not found" });
     res.status(200).json(listing);
   } catch (error) {
