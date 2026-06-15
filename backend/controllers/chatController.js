@@ -16,7 +16,6 @@ const createConversation = async (req, res) => {
       return res.status(400).json({ message: "You cannot message yourself about your own listing" });
     }
 
-    // upsert avoids creating duplicate conversations for the same listing + buyer
     const conversation = await Conversation.findOneAndUpdate(
       { listingId, buyerId: req.user._id },
       { $setOnInsert: { listingId, buyerId: req.user._id, sellerId: listing.seller } },
@@ -36,8 +35,8 @@ const getConversations = async (req, res) => {
       $or: [{ buyerId: req.user._id }, { sellerId: req.user._id }],
     })
       .populate("listingId", "title images price status")
-      .populate("buyerId", "name avatar")
-      .populate("sellerId", "name avatar")
+      .populate("buyerId", "username avatar")
+      .populate("sellerId", "username avatar")
       .sort({ updatedAt: -1 });
 
     res.status(200).json(conversations);
@@ -69,7 +68,6 @@ const getMessages = async (req, res) => {
 };
 
 // @route POST /messages/:conversationId
-// HTTP fallback for sending a message; Socket.io will handle real-time later
 const sendMessage = async (req, res) => {
   try {
     const { conversationId } = req.params;
