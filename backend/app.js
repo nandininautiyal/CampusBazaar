@@ -11,7 +11,8 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://campus-bazaar-ten.vercel.app/",
+    "http://localhost:5173", // if using Vite locally
+    "https://campus-bazaar-efz6ic3ug-nandineesprojects.vercel.app",
   ],
   credentials: true,
 }));
