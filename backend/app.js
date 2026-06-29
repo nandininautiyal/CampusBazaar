@@ -10,7 +10,8 @@ const app = express();
 
 app.use(cors({
   origin: [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://campus-bazaar-ten.vercel.app/",
   ],
   credentials: true,
 }));
