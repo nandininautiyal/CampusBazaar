@@ -9,11 +9,7 @@ const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const app = express();
 
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:5173", // if using Vite locally
-    "https://campus-bazaar-efz6ic3ug-nandineesprojects.vercel.app",
-  ],
+  origin: true,
   credentials: true,
 }));
 app.use(express.json());
