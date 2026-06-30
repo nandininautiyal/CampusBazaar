@@ -1,19 +1,29 @@
 :root {
-  --color-primary: #10B981;
-  --color-primary-dark: #0d9468;
-  --color-accent: #F97360;
-  --color-accent-dark: #e85d49;
-  --color-bg: #F9FAFB;
-  --color-text: #111827;
-  --color-card: #FFFFFF;
+  --color-primary: #256EFF;
+  --color-primary-dark: #1B4DCC;
+  --color-accent: #38D9FF;
+  --color-bg: #F4F9FF;
+  --color-surface: #FFFFFF;
+  --color-text: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-border: #D8E6F5;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0B1220;
+  --color-surface: #131C2E;
+  --color-text: #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-border: #243044;
 }
 
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Override Bootstrap green → emerald */
+/* Bootstrap green → sapphire */
 .btn-success {
   background-color: var(--color-primary) !important;
   border-color: var(--color-primary) !important;
@@ -46,31 +56,69 @@ body {
   color: var(--color-primary) !important;
 }
 
-/* Coral accent classes — use these manually where needed */
+/* Accent (cyan) utility classes */
 .btn-accent {
   background-color: var(--color-accent);
   border: none;
-  color: #fff;
+  color: #0F172A;
 }
 .btn-accent:hover {
-  background-color: var(--color-accent-dark);
-  color: #fff;
+  opacity: 0.85;
+  color: #0F172A;
 }
 .text-accent {
   color: var(--color-accent) !important;
 }
-.bg-accent {
-  background-color: var(--color-accent) !important;
+
+/* Cards, navbar, inputs follow theme */
+.card,
+.navbar,
+.modal-content {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
 }
 
-/* Unread message dot */
+.form-control,
+.form-select {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(37, 110, 255, 0.15) !important;
+}
+
+.text-muted {
+  color: var(--color-text-secondary) !important;
+}
+
+.border,
+.border-top,
+.border-bottom {
+  border-color: var(--color-border) !important;
+}
+
+/* Unread dot — used both in inbox list and nav link */
 .unread-dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background-color: var(--color-accent);
   display: inline-block;
   flex-shrink: 0;
+}
+
+.nav-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  position: absolute;
+  top: 2px;
+  right: -4px;
 }
 
 /* Bigger nav links */
@@ -78,9 +126,27 @@ body {
   font-size: 1.05rem;
   padding: 0.5rem 1rem !important;
   font-weight: 500;
+  position: relative;
 }
 
-/* Prevent empty page gaps on short content */
+/* Theme toggle button */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--color-text);
+}
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+}
+
 main {
   min-height: calc(100vh - 76px);
 }
