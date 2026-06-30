@@ -16,7 +16,20 @@ const Inbox = () => {
     setLoading(true);
     try {
       const data = await chatAPI.getConversations();
-      setConversations(data);
+      // For each conversation, fetch the last message's sender to know if it's unread
+      const withUnread = await Promise.all(
+        data.map(async (conv) => {
+          try {
+            const messages = await chatAPI.getMessages(conv._id);
+            const lastMsg = messages[messages.length - 1];
+            const isUnread = lastMsg && lastMsg.senderId !== user?.id;
+            return { ...conv, isUnread };
+          } catch {
+            return { ...conv, isUnread: false };
+          }
+        })
+      );
+      setConversations(withUnread);
     } catch {
       setError("Failed to load conversations.");
     } finally {
@@ -24,12 +37,18 @@ const Inbox = () => {
     }
   };
 
-  if (loading) return <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" /></div>;
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center py-5">
+        <div className="spinner-border text-success" />
+      </div>
+    );
+  }
 
   return (
     <div className="container py-5">
       <h2 className="fw-bold mb-1">Inbox</h2>
-      <p className="text-muted small mb-4">
+      <p className="text-muted mb-4">
         {conversations.length} conversation{conversations.length !== 1 ? "s" : ""}
       </p>
 
@@ -38,14 +57,17 @@ const Inbox = () => {
       {conversations.length === 0 ? (
         <div className="text-center py-5 text-muted">
           <p className="fs-5">💬 No conversations yet.</p>
-          <p className="small">Browse listings and message a seller to start chatting.</p>
-          <button onClick={() => navigate("/")} className="btn btn-success mt-2">Browse Listings</button>
+          <p>Browse listings and message a seller to start chatting.</p>
+          <button onClick={() => navigate("/")} className="btn btn-success mt-2">
+            Browse Listings
+          </button>
         </div>
       ) : (
         <div className="d-flex flex-column gap-3">
           {conversations.map((conv) => {
             const listing = typeof conv.listingId === "object" ? conv.listingId : null;
-            const otherUser = user?.id === conv.buyerId?._id ? conv.sellerId : conv.buyerId;
+            const isBuyer = user?.id === conv.buyerId?._id;
+            const otherUser = isBuyer ? conv.sellerId : conv.buyerId;
 
             return (
               <div
@@ -59,18 +81,24 @@ const Inbox = () => {
                     <img
                       src={listing.images[0]}
                       alt={listing.title}
-                      style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 8, flexShrink: 0 }}
+                      style={{ width: 64, height: 64, objectFit: "cover", borderRadius: 8, flexShrink: 0 }}
                     />
                   )}
                   <div className="flex-grow-1 min-w-0">
                     <div className="d-flex justify-content-between align-items-start">
-                      <h6 className="fw-semibold mb-0 text-truncate">
-                        {listing ? listing.title : "Listing"}
-                      </h6>
+                      <div className="d-flex align-items-center gap-2">
+                        {conv.isUnread && <span className="unread-dot" />}
+                        <h6 className="fw-semibold mb-0 text-truncate">
+                          {listing ? listing.title : "Listing"}
+                        </h6>
+                      </div>
                       <span className="text-muted small ms-2 flex-shrink-0">
                         {new Date(conv.updatedAt).toLocaleDateString()}
                       </span>
                     </div>
+                    <p className="text-muted small mb-1">
+                      with <strong>{otherUser?.username || "Unknown user"}</strong>
+                    </p>
                     <p className="text-muted small mb-0 text-truncate">
                       {conv.lastMessage || "No messages yet"}
                     </p>
