@@ -1,0 +1,86 @@
+:root {
+  --color-primary: #10B981;
+  --color-primary-dark: #0d9468;
+  --color-accent: #F97360;
+  --color-accent-dark: #e85d49;
+  --color-bg: #F9FAFB;
+  --color-text: #111827;
+  --color-card: #FFFFFF;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Override Bootstrap green → emerald */
+.btn-success {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+.btn-success:hover {
+  background-color: var(--color-primary-dark) !important;
+  border-color: var(--color-primary-dark) !important;
+}
+.btn-outline-success {
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+.btn-outline-success:hover {
+  background-color: var(--color-primary) !important;
+  color: #fff !important;
+}
+.text-success {
+  color: var(--color-primary) !important;
+}
+.bg-success {
+  background-color: var(--color-primary) !important;
+}
+.border-success {
+  border-color: var(--color-primary) !important;
+}
+.spinner-border.text-success {
+  color: var(--color-primary) !important;
+}
+.nav-link.active {
+  color: var(--color-primary) !important;
+}
+
+/* Coral accent classes — use these manually where needed */
+.btn-accent {
+  background-color: var(--color-accent);
+  border: none;
+  color: #fff;
+}
+.btn-accent:hover {
+  background-color: var(--color-accent-dark);
+  color: #fff;
+}
+.text-accent {
+  color: var(--color-accent) !important;
+}
+.bg-accent {
+  background-color: var(--color-accent) !important;
+}
+
+/* Unread message dot */
+.unread-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Bigger nav links */
+.navbar-nav .nav-link {
+  font-size: 1.05rem;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500;
+}
+
+/* Prevent empty page gaps on short content */
+main {
+  min-height: calc(100vh - 76px);
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -13,9 +13,9 @@ const Header = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm sticky-top">
+    <nav className="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm sticky-top py-3">
       <div className="container">
-        <Link className="navbar-brand fw-bold text-success fs-4" to="/">
+        <Link className="navbar-brand fw-bold fs-3 d-flex align-items-center gap-2" to="/" style={{ color: "var(--color-primary)" }}>
           🛍️ CampusBazaar
         </Link>
 
@@ -29,10 +29,10 @@ const Header = () => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto mb-2 mb-md-0">
+          <ul className="navbar-nav me-auto mb-2 mb-md-0 gap-2">
             <li className="nav-item">
               <Link
-                className={`nav-link ${location.pathname === "/" ? "active fw-semibold text-success" : ""}`}
+                className={`nav-link ${location.pathname === "/" ? "active fw-semibold" : ""}`}
                 to="/"
               >
                 Home
@@ -42,7 +42,7 @@ const Header = () => {
               <>
                 <li className="nav-item">
                   <Link
-                    className={`nav-link ${location.pathname === "/inbox" ? "active fw-semibold text-success" : ""}`}
+                    className={`nav-link ${location.pathname === "/inbox" ? "active fw-semibold" : ""}`}
                     to="/inbox"
                   >
                     💬 Inbox
@@ -50,7 +50,7 @@ const Header = () => {
                 </li>
                 <li className="nav-item">
                   <Link
-                    className={`nav-link ${location.pathname === "/my-listings" ? "active fw-semibold text-success" : ""}`}
+                    className={`nav-link ${location.pathname === "/my-listings" ? "active fw-semibold" : ""}`}
                     to="/my-listings"
                   >
                     My Listings
@@ -60,21 +60,21 @@ const Header = () => {
             )}
           </ul>
 
-          <div className="d-flex align-items-center gap-2">
+          <div className="d-flex align-items-center gap-3 flex-wrap">
             {user ? (
               <>
-                <Link to="/create-listing" className="btn btn-success btn-sm">
+                <Link to="/create-listing" className="btn btn-success fw-semibold">
                   + Sell Item
                 </Link>
-                <span className="text-muted small">Hi, <strong>{user.username}</strong></span>
-                <button onClick={handleLogout} className="btn btn-outline-danger btn-sm">
+                <span className="text-muted">Hi, <strong>{user.username}</strong></span>
+                <button onClick={handleLogout} className="btn btn-outline-danger">
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="btn btn-outline-success btn-sm">Login</Link>
-                <Link to="/signup" className="btn btn-success btn-sm">Sign Up</Link>
+                <Link to="/login" className="btn btn-outline-success">Login</Link>
+                <Link to="/signup" className="btn btn-success">Sign Up</Link>
               </>
             )}
           </div>
