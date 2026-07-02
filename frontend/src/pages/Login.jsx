@@ -29,8 +29,9 @@ const Login = () => {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="card shadow-sm p-4" style={{ width: "100%", maxWidth: 420 }}>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center py-5"
+      style={{ backgroundColor: "var(--color-bg)" }}>
+      <div className="card shadow-sm p-4 p-md-5 border" style={{ width: "100%", maxWidth: 440 }}>
         <div className="text-center mb-4">
           <div className="fs-1 mb-2">🛍️</div>
           <h2 className="fw-bold">Welcome Back</h2>
@@ -67,18 +68,16 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-success w-100 fw-semibold"
+            className="btn btn-success w-100 fw-semibold py-2"
           >
-            {loading ? (
-              <span className="spinner-border spinner-border-sm me-2" />
-            ) : null}
+            {loading && <span className="spinner-border spinner-border-sm me-2" />}
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
         <p className="text-center text-muted small mt-4 mb-0">
           Don't have an account?{" "}
-          <a href="/signup" className="text-success fw-semibold">Sign up</a>
+          <a href="/signup" className="text-success fw-semibold text-decoration-none">Sign up</a>
         </p>
       </div>
     </div>

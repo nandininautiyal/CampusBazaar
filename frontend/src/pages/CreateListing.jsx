@@ -57,7 +57,7 @@ const CreateListing = () => {
     <div className="container py-5">
       <div className="row justify-content-center">
         <div className="col-12 col-md-8 col-lg-6">
-          <div className="card border-0 shadow-sm p-4">
+          <div className="card border shadow-sm p-4 p-md-5">
             <h2 className="fw-bold mb-1">Post a New Listing</h2>
             <p className="text-muted small mb-4">Fill in the details to sell your item</p>
 
@@ -66,38 +66,46 @@ const CreateListing = () => {
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label className="form-label fw-medium">Title</label>
-                <input name="title" className="form-control" placeholder="What are you selling?" value={formData.title} onChange={handleChange} required />
+                <input name="title" className="form-control" placeholder="What are you selling?"
+                  value={formData.title} onChange={handleChange} required />
               </div>
               <div className="mb-3">
                 <label className="form-label fw-medium">Description</label>
-                <textarea name="description" className="form-control" rows={4} placeholder="Describe your item..." value={formData.description} onChange={handleChange} required />
+                <textarea name="description" className="form-control" rows={4}
+                  placeholder="Describe your item..." value={formData.description} onChange={handleChange} required />
               </div>
               <div className="mb-3">
                 <label className="form-label fw-medium">Price (₹)</label>
-                <input name="price" type="number" className="form-control" placeholder="0" value={formData.price} onChange={handleChange} required />
+                <input name="price" type="number" className="form-control" placeholder="0"
+                  value={formData.price} onChange={handleChange} required />
               </div>
               <div className="mb-3">
                 <label className="form-label fw-medium">Category</label>
                 <select name="category" className="form-select" value={formData.category} onChange={handleChange} required>
                   <option value="">Select a category</option>
-                  {CATEGORIES.map((c) => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace("-", " ")}</option>
+                  ))}
                 </select>
               </div>
               <div className="mb-4">
                 <label className="form-label fw-medium">Images (up to 5)</label>
-                <input type="file" className="form-control" multiple accept="image/*" onChange={handleImages} disabled={imageFiles.length >= 5} />
+                <input type="file" className="form-control" multiple accept="image/*"
+                  onChange={handleImages} disabled={imageFiles.length >= 5} />
                 {previews.length > 0 && (
                   <div className="d-flex flex-wrap gap-2 mt-3">
                     {previews.map((p, i) => (
                       <div key={i} className="position-relative">
                         <img src={p} alt="" style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 8 }} />
-                        <button type="button" onClick={() => removeImage(i)} className="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 px-1" style={{ fontSize: 10 }}>✕</button>
+                        <button type="button" onClick={() => removeImage(i)}
+                          className="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 px-1"
+                          style={{ fontSize: 10, lineHeight: 1.5 }}>✕</button>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
-              <button type="submit" disabled={loading} className="btn btn-success w-100 fw-semibold">
+              <button type="submit" disabled={loading} className="btn btn-success w-100 fw-semibold py-2">
                 {loading && <span className="spinner-border spinner-border-sm me-2" />}
                 {loading ? "Creating..." : "Post Listing"}
               </button>
