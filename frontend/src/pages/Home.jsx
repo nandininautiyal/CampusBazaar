@@ -45,15 +45,17 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <div className="bg-success text-white py-5">
+      <div className="hero-section text-white py-5">
         <div className="container">
-          <h1 className="fw-bold mb-1">Buy & Sell on Campus</h1>
-          <p className="mb-4 opacity-75">The trusted marketplace for NSUT students</p>
+          <h1 className="fw-bold mb-1" style={{ color: "#fff" }}>Buy & Sell on Campus</h1>
+          <p className="mb-4" style={{ color: "rgba(255,255,255,0.85)" }}>
+            The trusted marketplace for NSUT students
+          </p>
           <div className="row g-2">
-            <div className="col-12 col-md-6">
+            <div className="col-12 col-md-7">
               <input
                 type="text"
-                className="form-control"
+                className="form-control form-control-lg"
                 placeholder="🔍 Search listings..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -61,7 +63,7 @@ const Home = () => {
             </div>
             <div className="col-12 col-md-3">
               <select
-                className="form-select"
+                className="form-select form-select-lg"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
@@ -83,44 +85,49 @@ const Home = () => {
             <div className="spinner-border text-success" role="status" />
           </div>
         ) : listings.length === 0 ? (
-          <div className="text-center py-5 text-muted">
-            <p className="fs-5">No listings found.</p>
-            <p className="small">Try adjusting your search or category.</p>
+          <div className="text-center py-5">
+            <p className="fs-5 text-muted">No listings found.</p>
+            <p className="text-muted small">Try adjusting your search or category.</p>
           </div>
         ) : (
           <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
             {listings.map((listing) => (
               <div key={listing._id} className="col">
                 <div
-                  className="card h-100 shadow-sm border-0 cursor-pointer"
+                  className="card h-100 shadow-sm border"
                   onClick={() => navigate(`/listing/${listing._id}`)}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", transition: "box-shadow 0.2s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.boxShadow = "0 4px 20px rgba(37,110,255,0.15)"}
+                  onMouseLeave={(e) => e.currentTarget.style.boxShadow = ""}
                 >
-                  <div style={{ height: 180, overflow: "hidden", background: "#f0f0f0" }}>
+                  <div
+                    className="card-img-placeholder d-flex align-items-center justify-content-center"
+                    style={{ height: 200, overflow: "hidden", borderRadius: "8px 8px 0 0" }}
+                  >
                     {listing.images.length > 0 ? (
                       <img
                         src={listing.images[0]}
                         alt={listing.title}
-                        className="card-img-top w-100 h-100"
-                        style={{ objectFit: "cover" }}
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
                       />
                     ) : (
-                      <div className="w-100 h-100 d-flex align-items-center justify-content-center text-muted small">
-                        No image
-                      </div>
+                      <span className="text-muted small">No image</span>
                     )}
                   </div>
                   <div className="card-body d-flex flex-column">
                     <h6 className="card-title fw-semibold text-truncate">{listing.title}</h6>
-                    <p className="card-text text-muted small" style={{ fontSize: "0.8rem", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
+                    <p
+                      className="card-text text-muted small"
+                      style={{ overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}
+                    >
                       {listing.description}
                     </p>
                     <div className="mt-auto d-flex justify-content-between align-items-center">
-                      <span className="fw-bold text-success fs-5">₹{listing.price}</span>
-                      <span className="badge bg-light text-dark border">{listing.category}</span>
+                      <span className="fw-bold fs-5 text-success">₹{listing.price}</span>
+                      <span className="badge bg-secondary border">{listing.category}</span>
                     </div>
                     <div className="text-muted small mt-2">
-                      by {listing.seller?.username}
+                      by <strong>{listing.seller?.username || "unknown"}</strong>
                     </div>
                   </div>
                 </div>
