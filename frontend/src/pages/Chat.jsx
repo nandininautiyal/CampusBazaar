@@ -77,7 +77,10 @@ const Chat = () => {
   );
 
   return (
-    <div className="d-flex flex-column" style={{ height: "calc(100vh - 76px)" }}>
+    <div
+      className="d-flex flex-column"
+      style={{ height: "calc(100dvh - 64px)" }}
+    >
       {/* Header */}
       <div className="card border-0 border-bottom rounded-0 px-4 py-3 d-flex flex-row align-items-center gap-3">
         <button
@@ -91,8 +94,8 @@ const Chat = () => {
 
       {/* Messages */}
       <div
-        className="flex-grow-1 overflow-auto px-3 py-4"
-        style={{ backgroundColor: "var(--color-bg)" }}
+        className="flex-grow-1 overflow-auto px-3 py-3"
+        style={{ backgroundColor: "var(--color-bg)", WebkitOverflowScrolling: "touch" }}
       >
         {error && <div className="alert alert-danger small">{error}</div>}
 
@@ -146,8 +149,11 @@ const Chat = () => {
 
       {/* Input */}
       <div
-        className="border-top px-3 py-3"
-        style={{ backgroundColor: "var(--color-surface)" }}
+        className="border-top px-3 py-2"
+        style={{
+          backgroundColor: "var(--color-surface)",
+          paddingBottom: "max(12px, env(safe-area-inset-bottom))",
+        }}
       >
         <form
           onSubmit={handleSend}
@@ -161,11 +167,13 @@ const Chat = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             disabled={sending}
+            style={{ fontSize: 16 }}
           />
           <button
             type="submit"
             disabled={sending || !text.trim()}
-            className="btn btn-success px-4 fw-semibold"
+            className="btn btn-success fw-semibold"
+            style={{ minWidth: 72 }}
           >
             {sending ? <span className="spinner-border spinner-border-sm" /> : "Send"}
           </button>
