@@ -237,3 +237,56 @@ span { color: inherit; }
 [data-theme="dark"] ::-webkit-scrollbar { width: 6px; }
 [data-theme="dark"] ::-webkit-scrollbar-track { background: var(--color-bg); }
 [data-theme="dark"] ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+
+/* ─── Mobile fixes ──────────────────────────────────────── */
+
+/* Prevent horizontal scroll on mobile */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Make cards full width on small screens */
+@media (max-width: 576px) {
+  .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Listing grid single column on very small screens */
+  .row-cols-1 > * {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  /* Chat input full width */
+  .chat-input-row {
+    gap: 8px;
+  }
+
+  /* Forms full width padding */
+  .card.p-4 {
+    padding: 20px 16px !important;
+  }
+}
+
+/* Touch targets — minimum 44px height for mobile buttons */
+@media (max-width: 768px) {
+  .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-control,
+  .form-select {
+    min-height: 44px;
+    font-size: 16px !important;
+  }
+
+  /* Inbox cards easier to tap */
+  .card {
+    cursor: pointer;
+  }
+}
